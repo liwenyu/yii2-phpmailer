@@ -1,5 +1,5 @@
 {
-    "name": "liwenyu/phpmailer",
+    "name": "liwenyu/yii2-phpmailer",
     "description": "将 PHPMailer 封装成 Yii2 邮件发送组件，支持使用 Yii::$app->mail->send() 方式发送邮件",
     "type": "library",
     "keywords": [
