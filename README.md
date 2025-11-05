@@ -23,7 +23,7 @@ yii2-phpmailer/
 ```php
 'components' => [
     'mail' => [
-        'class' => 'yii\phpmailer\Mailer',
+        'class' => 'liwenyu\phpmailer\Mailer',
         'useGraphAPI' => true,  // 使用 Microsoft Graph API
         'graphApiConfig' => [
             'clientId' => 'your-client-id',
@@ -64,7 +64,7 @@ Yii::$app->mail->compose()
 
 ```php
 'mail' => [
-    'class' => 'yii\phpmailer\Mailer',
+    'class' => 'liwenyu\phpmailer\Mailer',
     'useGraphAPI' => true,
     'graphApiConfig' => [
         'clientId' => 'your-client-id',
@@ -79,7 +79,7 @@ Yii::$app->mail->compose()
 
 ```php
 'mail' => [
-    'class' => 'yii\phpmailer\Mailer',
+    'class' => 'liwenyu\phpmailer\Mailer',
     'useGraphAPI' => false,
     'phpmailerConfig' => [
         'host' => 'smtp.office365.com',
