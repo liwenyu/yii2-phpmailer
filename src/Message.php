@@ -9,7 +9,7 @@
  * @since 1.0.0
  */
 
-namespace yii\phpmailer;
+namespace liwenyu\phpmailer;
 
 use yii\mail\BaseMessage;
 use PHPMailer\PHPMailer\PHPMailer;
