@@ -1,0 +1,58 @@
+# 配置文件
+config.php
+
+# Composer
+/vendor/
+composer.phar
+
+# IDE 和编辑器
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# 操作系统文件
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# 日志文件
+*.log
+logs/
+runtime/
+
+# 临时文件
+*.tmp
+*.temp
+*.cache
+*.bak
+*.backup
+
+# PHP 相关
+*.php~
+*.php.bak
+
+# 测试和覆盖率报告
+/tests/_output/
+/tests/_support/_generated/
+.phpunit.result.cache
+coverage/
+.phpunit.cache/
+
+# 环境变量文件
+.env
+.env.local
+.env.*.local
+
