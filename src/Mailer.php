@@ -30,7 +30,7 @@ class Mailer extends BaseMailer
     /**
      * @var string 消息类名
      */
-    public $messageClass = 'yii\phpmailer\Message';
+    public $messageClass = 'liwenyu\phpmailer\Message';
 
     /**
      * @var array PHPMailer 配置

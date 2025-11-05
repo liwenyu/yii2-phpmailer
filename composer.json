@@ -28,12 +28,12 @@
     },
     "autoload": {
         "psr-4": {
-            "yii\\phpmailer\\": "src/"
+            "liwenyu\\phpmailer\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "yii\\phpmailer\\tests\\": "tests/"
+            "liwenyu\\phpmailer\\tests\\": "tests/"
         }
     },
     "minimum-stability": "stable",
