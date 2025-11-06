@@ -19,8 +19,8 @@ try {
     
 
     // 检查是否使用 SMTP
-    $useSmtp = !$app->mail->useGraphAPI;
-    echo "邮件发送方式: " . ($useSmtp ? "SMTP" : "Microsoft Graph API") . "\n";
+    $useSmtp = !$app->mail->useMicrosoft365;
+    echo "邮件发送方式: " . ($useSmtp ? "SMTP" : "Microsoft 365") . "\n";
     
     if ($useSmtp) {
         echo "SMTP 服务器: " . ($app->mail->phpmailerConfig['host'] ?? 'N/A') . "\n";
@@ -33,17 +33,17 @@ try {
             echo "   应用密码不是普通密码，需要在 Microsoft 账户中生成\n";
         }
     } else {
-        // 显示 Graph API 配置信息
-        $graphConfig = $app->mail->graphApiConfig;
-        echo "Microsoft Graph API 配置:\n";
-        echo "  - 租户ID: " . ($graphConfig['tenantId'] ?? 'N/A') . "\n";
-        echo "  - 客户端ID: " . (isset($graphConfig['clientId']) ? substr($graphConfig['clientId'], 0, 8) . '...' : 'N/A') . "\n";
-        echo "  - 发件人邮箱: " . ($graphConfig['userEmail'] ?? 'N/A') . "\n";
+        // 显示 Microsoft 365 配置信息
+        $m365Config = $app->mail->microsoft365Config;
+        echo "Microsoft 365 配置:\n";
+        echo "  - 租户ID: " . ($m365Config['tenantId'] ?? 'N/A') . "\n";
+        echo "  - 客户端ID: " . (isset($m365Config['clientId']) ? substr($m365Config['clientId'], 0, 8) . '...' : 'N/A') . "\n";
+        echo "  - 发件人邮箱: " . ($m365Config['userEmail'] ?? 'N/A') . "\n";
         echo "  - API 端点: https://graph.microsoft.com/v1.0\n";
     }
     
     // 根据配置选择发件人
-    $fromEmail = $useSmtp ? 'liwenyu66@126.com' : ($app->mail->graphApiConfig['userEmail'] ?? 'zhangyu@sruntech.onmicrosoft.com');
+    $fromEmail = $useSmtp ? 'liwenyu66@126.com' : ($app->mail->microsoft365Config['userEmail'] ?? 'zhangyu@sruntech.onmicrosoft.com');
     $toEmail = 'lwy@srun.com';
     
     echo "\n正在发送邮件...\n";
@@ -53,8 +53,8 @@ try {
     $result = $app->mail->compose()
         ->setFrom($fromEmail)
         ->setTo($toEmail)
-        ->setSubject('Yii2 PHPMailer ' . ($useSmtp ? 'SMTP' : 'Graph API') . ' 测试 - ' . date('Y-m-d H:i:s'))
-        ->setHtmlBody('<h2>Yii2 PHPMailer ' . ($useSmtp ? 'SMTP' : 'Graph API') . ' 测试</h2><p>这是一封通过 <strong>Yii2 PHPMailer</strong> 使用 <strong>' . ($useSmtp ? 'SMTP' : 'Microsoft Graph API') . '</strong> 方式发送的测试邮件。</p><p>发送方式: ' . ($useSmtp ? 'SMTP (126 邮箱)' : 'Microsoft Graph API') . '</p><p>发送时间：' . date('Y-m-d H:i:s') . '</p>')
+        ->setSubject('Yii2 PHPMailer ' . ($useSmtp ? 'SMTP' : 'Microsoft 365') . ' 测试 - ' . date('Y-m-d H:i:s'))
+        ->setHtmlBody('<h2>Yii2 PHPMailer ' . ($useSmtp ? 'SMTP' : 'Microsoft 365') . ' 测试</h2><p>这是一封通过 <strong>Yii2 PHPMailer</strong> 使用 <strong>' . ($useSmtp ? 'SMTP' : 'Microsoft 365') . '</strong> 方式发送的测试邮件。</p><p>发送方式: ' . ($useSmtp ? 'SMTP (126 邮箱)' : 'Microsoft 365') . '</p><p>发送时间：' . date('Y-m-d H:i:s') . '</p>')
         ->send();
     
     if ($result) {
@@ -65,7 +65,7 @@ try {
             echo "\n💡 提示:\n";
             echo "   - 如果失败，请检查应用密码是否正确\n";
             echo "   - 应用密码需要在 Microsoft 账户安全设置中生成\n";
-            echo "   - 或者可以切换到 Graph API 方式（更稳定）\n";
+            echo "   - 或者可以切换到 Microsoft 365 方式（更稳定）\n";
         } else {
             echo "\n💡 提示:\n";
             echo "   - 如果失败，请检查 Azure 应用权限配置\n";

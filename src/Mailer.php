@@ -42,20 +42,20 @@ class Mailer extends BaseMailer
      * - 'username': string, SMTP 用户名
      * - 'password': string, SMTP 密码
      * - 'authType': string, 认证类型 (XOAUTH2, LOGIN, PLAIN)
-     * - 'useGraphAPI': bool, 是否使用 Microsoft Graph API（推荐）
-     * - 'graphApiConfig': array, Graph API 配置（clientId, clientSecret, tenantId, userEmail）
+     * - 'useMicrosoft365': bool, 是否使用 Microsoft 365（推荐）
+     * - 'microsoft365Config': array, Microsoft 365 配置（clientId, clientSecret, tenantId, userEmail）
      */
     public $phpmailerConfig = [];
 
     /**
-     * @var bool 是否使用 Microsoft Graph API
+     * @var bool 是否使用 Microsoft 365
      */
-    public $useGraphAPI = false;
+    public $useMicrosoft365 = false;
 
     /**
-     * @var array Microsoft Graph API 配置
+     * @var array Microsoft 365 配置
      */
-    public $graphApiConfig = [];
+    public $microsoft365Config = [];
 
     /**
      * @var PHPMailer PHPMailer 实例
@@ -79,13 +79,13 @@ class Mailer extends BaseMailer
     {
         parent::init();
 
-        // 如果使用 Graph API，检查配置
-        if ($this->useGraphAPI || !empty($this->graphApiConfig)) {
-            $this->useGraphAPI = true;
-            if (empty($this->graphApiConfig['clientId']) || 
-                empty($this->graphApiConfig['clientSecret']) || 
-                empty($this->graphApiConfig['tenantId'])) {
-                throw new InvalidConfigException('使用 Microsoft Graph API 时，必须配置 clientId, clientSecret 和 tenantId');
+        // 如果使用 Microsoft 365，检查配置
+        // 只有当 useMicrosoft365 明确为 true 时，才使用 Microsoft 365
+        if ($this->useMicrosoft365) {
+            if (empty($this->microsoft365Config['clientId']) || 
+                empty($this->microsoft365Config['clientSecret']) || 
+                empty($this->microsoft365Config['tenantId'])) {
+                throw new InvalidConfigException('使用 Microsoft 365 时，必须配置 clientId, clientSecret 和 tenantId');
             }
         }
     }
@@ -112,8 +112,8 @@ class Mailer extends BaseMailer
     {
         $mail = new PHPMailer(true);
 
-        // 如果使用 Graph API，不需要配置 SMTP
-        if (!$this->useGraphAPI) {
+        // 如果使用 Microsoft 365，不需要配置 SMTP
+        if (!$this->useMicrosoft365) {
             // 配置 SMTP
             if (!empty($this->phpmailerConfig)) {
                 $mail->isSMTP();
@@ -147,8 +147,11 @@ class Mailer extends BaseMailer
                     $mail->AuthType = $this->phpmailerConfig['authType'];
                 }
                 
+                // SMTPAuth 默认值为 true，如果配置中没有显式设置，则使用默认值
                 if (isset($this->phpmailerConfig['SMTPAuth'])) {
                     $mail->SMTPAuth = $this->phpmailerConfig['SMTPAuth'];
+                } else {
+                    $mail->SMTPAuth = true;  // 默认启用 SMTP 认证
                 }
             }
         }
@@ -161,8 +164,8 @@ class Mailer extends BaseMailer
      */
     protected function sendMessage($message)
     {
-        if ($this->useGraphAPI) {
-            return $this->sendViaGraphAPI($message);
+        if ($this->useMicrosoft365) {
+            return $this->sendViaMicrosoft365($message);
         } else {
             return $this->sendViaSMTP($message);
         }
@@ -191,12 +194,12 @@ class Mailer extends BaseMailer
     }
 
     /**
-     * 通过 Microsoft Graph API 发送邮件
+     * 通过 Microsoft 365 发送邮件
      * 
      * @param Message $message
      * @return bool
      */
-    protected function sendViaGraphAPI($message)
+    protected function sendViaMicrosoft365($message)
     {
         // 获取访问令牌
         $accessToken = $this->getAccessToken();
@@ -206,7 +209,7 @@ class Mailer extends BaseMailer
         }
 
         // 获取发件人邮箱
-        $fromEmail = $this->graphApiConfig['userEmail'] ?? null;
+        $fromEmail = $this->microsoft365Config['userEmail'] ?? null;
         if (!$fromEmail) {
             $from = $message->getFrom();
             if (is_array($from)) {
@@ -283,7 +286,7 @@ class Mailer extends BaseMailer
             return $response->getStatusCode() === 202;
             
         } catch (\Exception $e) {
-            throw new \yii\base\Exception('通过 Graph API 发送邮件失败: ' . $e->getMessage());
+            throw new \yii\base\Exception('通过 Microsoft 365 发送邮件失败: ' . $e->getMessage());
         }
     }
 
@@ -301,7 +304,7 @@ class Mailer extends BaseMailer
 
         // 获取新令牌
         $client = new Client([
-            'base_uri' => "https://login.microsoftonline.com/{$this->graphApiConfig['tenantId']}/",
+            'base_uri' => "https://login.microsoftonline.com/{$this->microsoft365Config['tenantId']}/",
             'timeout' => 30,
         ]);
 
@@ -309,8 +312,8 @@ class Mailer extends BaseMailer
             $response = $client->post('oauth2/v2.0/token', [
                 'form_params' => [
                     'grant_type' => 'client_credentials',
-                    'client_id' => $this->graphApiConfig['clientId'],
-                    'client_secret' => $this->graphApiConfig['clientSecret'],
+                    'client_id' => $this->microsoft365Config['clientId'],
+                    'client_secret' => $this->microsoft365Config['clientSecret'],
                     'scope' => 'https://graph.microsoft.com/.default'
                 ],
                 'headers' => [

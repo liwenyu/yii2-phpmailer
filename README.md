@@ -24,8 +24,8 @@ yii2-phpmailer/
 'components' => [
     'mail' => [
         'class' => 'liwenyu\phpmailer\Mailer',
-        'useGraphAPI' => true,  // 使用 Microsoft Graph API
-        'graphApiConfig' => [
+        'useMicrosoft365' => true,  // 使用 Microsoft 365
+        'microsoft365Config' => [
             'clientId' => 'your-client-id',
             'clientSecret' => 'your-client-secret',
             'tenantId' => 'your-tenant-id',
@@ -60,13 +60,13 @@ Yii::$app->mail->compose()
 
 ## ⚙️ 配置选项
 
-### Microsoft Graph API 配置（推荐）
+### Microsoft 365 配置
 
 ```php
 'mail' => [
     'class' => 'liwenyu\phpmailer\Mailer',
-    'useGraphAPI' => true,
-    'graphApiConfig' => [
+    'useMicrosoft365' => true,
+    'microsoft365Config' => [
         'clientId' => 'your-client-id',
         'clientSecret' => 'your-client-secret',
         'tenantId' => 'your-tenant-id',
@@ -80,14 +80,14 @@ Yii::$app->mail->compose()
 ```php
 'mail' => [
     'class' => 'liwenyu\phpmailer\Mailer',
-    'useGraphAPI' => false,
+    'useMicrosoft365' => false,
     'phpmailerConfig' => [
         'host' => 'smtp.office365.com',
         'port' => 587,
         'encryption' => 'tls',
         'username' => 'your-email@yourdomain.com',
         'password' => 'your-password',
-        'SMTPAuth' => true,
+        // 'SMTPAuth' => true,  // 默认为 true，可省略
     ],
 ],
 ```
@@ -95,7 +95,7 @@ Yii::$app->mail->compose()
 ## 📧 功能特性
 
 - ✅ 完全兼容 Yii2 Mailer 接口
-- ✅ 支持 Microsoft Graph API（推荐）
+- ✅ 支持 Microsoft 365（推荐）
 - ✅ 支持传统 SMTP 发送
 - ✅ 支持 HTML 和纯文本邮件
 - ✅ 支持附件和嵌入图片
@@ -148,7 +148,7 @@ Yii::$app->mail->send($message);
 
 - 继承自 `yii\mail\BaseMailer`
 - 支持两种发送方式：
-  - Microsoft Graph API（使用客户端凭据流）
+  - Microsoft 365（使用客户端凭据流）
   - 传统 SMTP
 
 ### Message 类
@@ -159,7 +159,7 @@ Yii::$app->mail->send($message);
 
 ## 📝 注意事项
 
-1. **Microsoft Graph API 方式**：
+1. **Microsoft 365 方式**：
 
    - 使用客户端凭据流（Client Credentials Flow）
    - 不需要用户交互
