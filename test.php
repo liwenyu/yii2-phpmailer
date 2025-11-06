@@ -38,12 +38,12 @@ try {
         echo "Microsoft 365 配置:\n";
         echo "  - 租户ID: " . ($m365Config['tenantId'] ?? 'N/A') . "\n";
         echo "  - 客户端ID: " . (isset($m365Config['clientId']) ? substr($m365Config['clientId'], 0, 8) . '...' : 'N/A') . "\n";
-        echo "  - 发件人邮箱: " . ($m365Config['userEmail'] ?? 'N/A') . "\n";
+        echo "  - 发件人邮箱: " . ($m365Config['username'] ?? 'N/A') . "\n";
         echo "  - API 端点: https://graph.microsoft.com/v1.0\n";
     }
     
     // 根据配置选择发件人
-    $fromEmail = $useSmtp ? 'liwenyu66@126.com' : ($app->mail->microsoft365Config['userEmail'] ?? 'zhangyu@sruntech.onmicrosoft.com');
+    $fromEmail = $useSmtp ? 'liwenyu66@126.com' : ($app->mail->microsoft365Config['username'] ?? 'zhangyu@sruntech.onmicrosoft.com');
     $toEmail = 'lwy@srun.com';
     
     echo "\n正在发送邮件...\n";

@@ -42,8 +42,9 @@ class Mailer extends BaseMailer
      * - 'username': string, SMTP 用户名
      * - 'password': string, SMTP 密码
      * - 'authType': string, 认证类型 (XOAUTH2, LOGIN, PLAIN)
+     * - 'SMTPOptions': array, SMTP SSL/TLS 选项（如禁用证书验证等）
      * - 'useMicrosoft365': bool, 是否使用 Microsoft 365（推荐）
-     * - 'microsoft365Config': array, Microsoft 365 配置（clientId, clientSecret, tenantId, userEmail）
+     * - 'microsoft365Config': array, Microsoft 365 配置（clientId, clientSecret, tenantId, username）
      */
     public $phpmailerConfig = [];
 
@@ -153,6 +154,11 @@ class Mailer extends BaseMailer
                 } else {
                     $mail->SMTPAuth = true;  // 默认启用 SMTP 认证
                 }
+                
+                // 设置 SMTP SSL/TLS 选项
+                if (isset($this->phpmailerConfig['SMTPOptions']) && is_array($this->phpmailerConfig['SMTPOptions'])) {
+                    $mail->SMTPOptions = $this->phpmailerConfig['SMTPOptions'];
+                }
             }
         }
 
@@ -209,7 +215,7 @@ class Mailer extends BaseMailer
         }
 
         // 获取发件人邮箱
-        $fromEmail = $this->microsoft365Config['userEmail'] ?? null;
+        $fromEmail = $this->microsoft365Config['username'] ?? null;
         if (!$fromEmail) {
             $from = $message->getFrom();
             if (is_array($from)) {

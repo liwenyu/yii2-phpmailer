@@ -29,7 +29,7 @@ yii2-phpmailer/
             'clientId' => 'your-client-id',
             'clientSecret' => 'your-client-secret',
             'tenantId' => 'your-tenant-id',
-            'userEmail' => 'your-email@yourdomain.com',
+            'username' => 'your-email@yourdomain.com',
         ],
     ],
 ],
@@ -70,7 +70,7 @@ Yii::$app->mail->compose()
         'clientId' => 'your-client-id',
         'clientSecret' => 'your-client-secret',
         'tenantId' => 'your-tenant-id',
-        'userEmail' => 'your-email@yourdomain.com',
+        'username' => 'your-email@yourdomain.com',
     ],
 ],
 ```
