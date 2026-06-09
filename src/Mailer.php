@@ -127,12 +127,17 @@ class Mailer extends BaseMailer
                     $mail->Port = $this->phpmailerConfig['port'];
                 }
                 
-                if (isset($this->phpmailerConfig['encryption'])) {
-                    $encryption = strtoupper($this->phpmailerConfig['encryption']);
+                if (array_key_exists('encryption', $this->phpmailerConfig)) {
+                    $encryption = strtoupper(trim((string)$this->phpmailerConfig['encryption']));
                     if ($encryption === 'TLS') {
                         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                        $mail->SMTPAutoTLS = true;
                     } elseif ($encryption === 'SSL') {
                         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+                        $mail->SMTPAutoTLS = false;
+                    } elseif (in_array($encryption, ['', '0', 'NONE', 'FALSE', 'NO'], true)) {
+                        $mail->SMTPSecure = '';
+                        $mail->SMTPAutoTLS = false;
                     }
                 }
                 
